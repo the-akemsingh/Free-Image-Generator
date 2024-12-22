@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import SuggestedPrompts from "@/components/suggested-prompts";
-import { GenerateImage } from "../actions";
 
 export default function Home() {
   const [prompt, setPrompt] = useState<string>("");
@@ -15,14 +15,17 @@ export default function Home() {
   async function generateImage() {
     setIsLoading(true);
     try {
-      const response = await GenerateImage(prompt);
+      const response = await axios.post(
+        `${process.env.B_URL}/api/generate-image`,
+        { prompt },
+        { responseType: "blob" }
+      );
 
-      if (response.imageBase64) {
-        setImageUrl(response.imageBase64);
-        setErrorMessage(null);
-      } else {
-        throw new Error(response.error || 'Unknown error');
-      }
+      const imageBlob = response.data;
+      //@ts-ignore
+      const imageObjectURL = URL.createObjectURL(imageBlob);
+      setImageUrl(imageObjectURL);
+      setErrorMessage(null);
     } catch (error) {
       console.error(error);
       setErrorMessage("An error occurred while generating the image.");
@@ -30,7 +33,6 @@ export default function Home() {
       setIsLoading(false);
     }
   }
-
 
   function downloadImage() {
     if (!imageUrl) return;
@@ -43,7 +45,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 flex items-center justify-center">
-      <div className="w-full flex max-w-5xl gap-8 px-6">
+      <div className="w-full max-w-xl px-6">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -84,26 +86,11 @@ export default function Home() {
               "Generate Image"
             )}
           </motion.button>
+          <div>
+            *This may take some time to generate. But it will be worth the wait :{")"}
+          </div>
 
-          {!imageUrl && (
-            <div>
-              *This may take some time to generate. But it will be worth the wait :{")"}
-            </div>
-          )}
-
-          {errorMessage && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-red-500 mt-4"
-            >
-              {errorMessage}
-            </motion.p>
-          )}
-          <SuggestedPrompts setPrompt={setPrompt} />
-        </motion.div>
-        <div>
-        <AnimatePresence>
+          <AnimatePresence>
             {imageUrl && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -129,8 +116,46 @@ export default function Home() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+
+          {errorMessage && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-red-500 mt-4"
+            >
+              {errorMessage}
+            </motion.p>
+          )}
+          <SuggestedPrompts setPrompt={setPrompt} />
+        </motion.div>
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+// "use client";
+
+
+// import ExampleGallery from "@/components/example-gallery";
+// import React, { useState } from "react";
+
+
+// export default function Home() {
+
+
+
+//     return (
+//         <div>
+//             <ExampleGallery ></ExampleGallery>
+//         </div>
+//     );
+// }
