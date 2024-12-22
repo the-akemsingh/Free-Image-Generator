@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import SuggestedPrompts from "@/components/suggested-prompts";

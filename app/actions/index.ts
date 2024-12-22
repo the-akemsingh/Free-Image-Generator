@@ -32,7 +32,6 @@ export async function GenerateImage(prompt: string) {
   } catch (error) {
     console.error('Error generating image:', error)
     return { 
-      imageUrl: '', 
       error: 'Failed to generate image' 
     }
   }
