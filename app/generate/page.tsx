@@ -16,7 +16,7 @@ export default function Home() {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${process.env.B_URL}/api/generate-image`,
+        `${process.env.B_URL}`,
         { prompt },
         { responseType: "blob" }
       );
