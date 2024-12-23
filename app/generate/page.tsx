@@ -30,20 +30,9 @@ export default function Home() {
       setErrorMessage(null);
     } catch (error) {
       console.error(error);
-      // setErrorMessage("An error occurred while generating the image.");
+      setErrorMessage("An error occurred while generating the image.");
     } finally {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_URL}`,
-        { prompt },
-        { responseType: "blob" }
-      );
-
-      
-      const imageBlob = response.data;
-      //@ts-ignore
-      const imageObjectURL = URL.createObjectURL(imageBlob);
-      setImageUrl(imageObjectURL);
-      setErrorMessage(null);
+    
       setIsLoading(false);
     }
   }
