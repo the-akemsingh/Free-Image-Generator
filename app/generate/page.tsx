@@ -16,7 +16,7 @@ export default function Home() {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${process.env.B_URL}`,
+        `${process.env.NEXT_PUBLIC_URL}`,
         { prompt },
         { responseType: "blob" }
       );
